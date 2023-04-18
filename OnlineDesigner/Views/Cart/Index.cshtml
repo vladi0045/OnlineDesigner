@@ -1,0 +1,54 @@
+﻿@{
+	ViewData["Title"] = "Cart";
+}
+
+<h1>Cart</h1>
+<table cellpadding="2" cellspacing="2" border="1">
+	<tr>
+		<th>Option</th>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Photo</th>
+		<th>Price</th>
+		<th>Quantity</th>
+		<th>Sub Total</th>
+	</tr>
+	@foreach (var item in ViewBag.cart)
+	{
+		<tr>
+			<td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Design.Id">Remove</a></td>
+			<td>@item.Design.Id</td>
+			<td>@item.Design.Item.Name</td>
+			<td><img src="~/images/@item.Design.Img" width="60" /> </td>
+			<td>@item.Design.Item.Price</td>
+			<td>@item.Quantity</td>
+			<td>@(item.Design.Item.Price * item.Quantity)</td>
+		</tr>
+	}
+
+<form asp-controller="Orders" asp-action="Create" enctype="multipart/form-data" method="post">
+	<tr>
+		<td align="right" colspan="6">Sum</td>
+		<td>
+			<input type="number" id="price" name="price" value=@ViewBag.total readonly>
+		</td>
+	</tr>
+	<fieldset>
+		<legend>Select a payment method:</legend>
+
+		<div>
+			<input type="radio" id="cash" name="method" value="cash"
+				   checked>
+			<label for="cash">Cash on delivery</label>
+		</div>
+
+		<div>
+			<input type="radio" id="card" name="method" value="card">
+			<label for="card">Card</label>
+		</div>
+	</fieldset>
+	<br>
+	<p><input type="submit" value="Create" class="btn btn-primary" /></p>
+</form>
+</table>
+<a asp-controller="Home" asp-action="Index">Continue Shopping</a>

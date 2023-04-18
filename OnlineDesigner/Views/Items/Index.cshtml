@@ -1,0 +1,68 @@
+﻿@model IEnumerable<OnlineDesigner.Models.Item>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head runat="server"> 
+    <link href="~/lib/bootstrap/dist/css/carousel.css" rel="stylesheet">
+</head>
+
+<style>
+    .row {
+        margin: 0 -5px;
+    }
+
+    .card {
+        display: inline-block;
+        margin: 5px 5px 5px 5px;
+    }
+</style>
+
+<h1>Items</h1>
+@if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole(Role.Administrator.ToString()))
+                        {
+                            <p>
+                                <a asp-action="Create">Create New</a>
+                            </p>
+                        }
+                    }
+<div class="row">
+    @foreach (var item in Model) {
+        @if (ViewBag.Id == null || ViewBag.Id == item.Type.Id)
+        {
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="~/Images/@item.Img" alt="Card image cap" height="360">
+                <div class="card-body">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.Description)
+                        Sex:
+                        @Html.DisplayFor(modelItem => item.Sex)
+                        Type:
+                        @Html.DisplayFor(modelItem => item.Type.Name)
+                        Price:
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </p>
+                    <p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole(Role.Administrator.ToString()))
+                            {
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </td>
+                            }
+                        }
+                    </p>
+                    <p><a class="btn btn-default" asp-controller="Designs" asp-action="Create" asp-route-id=@item.Id role="button">&euro;@item.Price Add to cart &raquo;</a></p>
+                </div>
+            </div>
+        }
+    }
+</div>
+    

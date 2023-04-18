@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+@inject OnlineDesigner.Controllers.TypesController layout
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - OnlineDesigner</title>
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" runat=server asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" runat=server asp-append-version="true" />
+	<link rel="stylesheet" href="~/OnlineDesigner.styles.css" asp-append-version="true" runat=server />
+	<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+	<link href="~/lib/bootstrap/dist/css/carousel.css" rel="stylesheet">
+</head>
+
+<style>
+	footer {
+		padding: 18px 0;
+		background: #111;
+		color: #fff;
+		display: flex;
+	}
+	.sticky-footer {
+		position: absolute; /* for it to disappear under last body element */
+		bottom: 0; /* so the footer can stick to the bottom*/
+	} 
+</style>
+
+<body class="body-for-sticky">
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OnlineDesigner</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<ul class="navbar-nav flex-grow-1 justify-content-flex-end">
+					@if (User.Identity.IsAuthenticated)
+					{
+						@if (User.IsInRole(Role.Administrator.ToString()))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Types" asp-action="Index">Types</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Items for admin</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+							</li>
+						}
+					}
+					<li class="nav-item">
+						<div class="dropdown">
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Items
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								@foreach (var item in layout.TypeList())
+								{
+									<a class="dropdown-item" asp-controller="Items" asp-action="Index" asp-route-id=@item.Id>@Html.DisplayFor(modelItem => item.Name)</a>
+								}
+								<a class="dropdown-item" asp-controller="Items" asp-action="Index" asp-route-id= >All</a>
+							</div>
+						</div>
+					</li>
+					@if (User.Identity.IsAuthenticated)
+					{
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+						</li>
+					}
+				</ul>
+				<ul class="navbar-nav flex-grow-1 justify-content-end">
+					@if (!User.Identity.IsAuthenticated)
+					{
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+						</li>
+					}
+					else
+					{
+						<li class="nav-item">
+							<a class="nav-link text-dark">Logged in as: @User.Identity.Name</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
+						</li>
+					}
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="footer sticky-footer">
+		<div class="container">
+			&copy; 2023 - OnlineDesigner - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
