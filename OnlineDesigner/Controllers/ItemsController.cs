@@ -153,6 +153,8 @@ namespace OnlineDesigner.Controllers
                          Text = i.Name
                      }).ToList();
 
+                Models.Type typeFromDB = _context.Type.Find(item.TypeId);
+
                 try
                 {
                     _context.Update(item);

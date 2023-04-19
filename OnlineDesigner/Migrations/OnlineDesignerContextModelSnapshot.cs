@@ -51,15 +51,15 @@ namespace OnlineDesigner.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e38aff69-1fc3-459f-83af-7ceef123c7f8",
-                            ConcurrencyStamp = "2c9f9a61-5482-464c-960c-26914d408fcf",
+                            Id = "78f77ed3-9ca4-4387-afee-1b92c5fa96aa",
+                            ConcurrencyStamp = "115aead9-e6ae-4969-b7f0-027ce0eefe07",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "d9be2b4b-7e00-435a-b970-d9882d7bb69d",
-                            ConcurrencyStamp = "17006e13-d659-4658-8754-8521b64c97d7",
+                            Id = "a20516e6-2731-4fea-8a71-e122d42901ff",
+                            ConcurrencyStamp = "7e5e4fe3-e8ec-4136-abf2-dc53d874f26a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -252,8 +252,8 @@ namespace OnlineDesigner.Migrations
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");

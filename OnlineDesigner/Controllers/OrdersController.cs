@@ -48,7 +48,7 @@ namespace OnlineDesigner.Controllers
         }
 
         // GET: Orders/Create
-        public IActionResult Create(int price, string method)
+        public IActionResult Create(double price, string method)
         {
             return View();
         }
@@ -58,7 +58,7 @@ namespace OnlineDesigner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Desgins,Status,Price")] Order order, int price, string method)
+        public async Task<IActionResult> Create([Bind("Id,Desgins,Status,Price")] Order order, double price, string method)
         {
 
             if (ModelState.IsValid)

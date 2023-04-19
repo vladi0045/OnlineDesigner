@@ -26,7 +26,8 @@
 		</tr>
 	}
 
-<form asp-controller="Orders" asp-action="Create" enctype="multipart/form-data" method="post">
+<form asp-controller="Orders" asp-action="Create">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 	<tr>
 		<td align="right" colspan="6">Sum</td>
 		<td>
@@ -37,13 +38,13 @@
 		<legend>Select a payment method:</legend>
 
 		<div>
-			<input type="radio" id="cash" name="method" value="cash"
+			<input  type="radio" id="method" name="method" value="cash"
 				   checked>
 			<label for="cash">Cash on delivery</label>
 		</div>
 
 		<div>
-			<input type="radio" id="card" name="method" value="card">
+			<input type="radio" id="method" name="method" value="card">
 			<label for="card">Card</label>
 		</div>
 	</fieldset>
