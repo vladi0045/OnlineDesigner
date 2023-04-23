@@ -16,7 +16,10 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Designs)
+                @Html.DisplayNameFor(model => model.CartItems)
+            </th>
+            <th>
+                <label>Quantity</label>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -37,10 +40,24 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @foreach(var design in item.Designs)
+                <table class="table">
+                @foreach(var cartitem in item.CartItems)
                 {
-                    @Html.DisplayFor(modelItem => design.Item.Name)
+                    <tr>
+                    @Html.DisplayFor(modelItem => cartitem.Design.Item.Name)
+                    </tr>
                 }
+                </table>
+            </td>
+            <td>
+                <table class="table">
+                @foreach(var cartitem in item.CartItems)
+                {
+                    <tr>
+                    @Html.DisplayFor(modelItem => cartitem.Quantity)
+                    </tr>
+                }
+                </table>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)

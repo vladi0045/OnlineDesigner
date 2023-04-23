@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,13 @@ namespace OnlineDesigner.Controllers
     public class OrdersController : Controller
     {
         private readonly OnlineDesignerContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public OrdersController(OnlineDesignerContext context)
+        public OrdersController(OnlineDesignerContext context, UserManager<User> userManager)
         {
             _context = context;
-            _context.Order.Include(i => i.Designs).ToList();
+            _userManager = userManager;
+            _context.Order.Include(i => i.CartItems).ToList();
         }
 
         // GET: Orders
@@ -58,26 +61,25 @@ namespace OnlineDesigner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Desgins,Status,Price")] Order order, double price, string method)
+        public async Task<IActionResult> Create([Bind("Id,CartItems, Status,Price")] Order order, double price, string method)
         {
 
             if (ModelState.IsValid)
             {
                 order.Status = false;
                 var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-                List<Design> temp = new List<Design>();
-                foreach (var item in cart)
-                {
 
-                        temp.Add(item.Design);
-                }
-
-                order.Designs = temp;
+                order.CartItems = cart;
 
                 order.Price = price;
 
                 order.PaymentMethod = method;
 
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                List<Order> temp = new List<Order>();
+                temp.Add(order);
+                user.Orders = temp;
+                _context.Update(user);
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ThankYou));
@@ -106,7 +108,7 @@ namespace OnlineDesigner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Designs,Status,Price")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CartItems, Status,Price")] Order order)
         {
             if (id != order.Id)
             {
@@ -181,6 +183,12 @@ namespace OnlineDesigner.Controllers
         public async Task<IActionResult> ThankYou()
         {
             return View(await _context.Order.ToListAsync());
+        }
+        public async Task<IActionResult> YourOrders()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            return View(user.Orders);
         }
     }
 }

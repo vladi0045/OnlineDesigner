@@ -51,15 +51,15 @@ namespace OnlineDesigner.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "78f77ed3-9ca4-4387-afee-1b92c5fa96aa",
-                            ConcurrencyStamp = "115aead9-e6ae-4969-b7f0-027ce0eefe07",
+                            Id = "e3ca42e6-c635-4877-8bbe-493464b52db1",
+                            ConcurrencyStamp = "a84b3351-85ed-444f-b9de-cbd31c8096b4",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "a20516e6-2731-4fea-8a71-e122d42901ff",
-                            ConcurrencyStamp = "7e5e4fe3-e8ec-4136-abf2-dc53d874f26a",
+                            Id = "d0070ecc-f0ea-4631-8042-ad9833e2b7e8",
+                            ConcurrencyStamp = "72974f0c-933a-4b7e-8799-6dbeefc465b0",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -171,6 +171,32 @@ namespace OnlineDesigner.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("OnlineDesigner.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DesignId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("CartItem");
+                });
+
             modelBuilder.Entity("OnlineDesigner.Models.Design", b =>
                 {
                     b.Property<int>("Id")
@@ -189,9 +215,6 @@ namespace OnlineDesigner.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Size")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -199,8 +222,6 @@ namespace OnlineDesigner.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ItemId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Design");
                 });
@@ -405,6 +426,21 @@ namespace OnlineDesigner.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OnlineDesigner.Models.CartItem", b =>
+                {
+                    b.HasOne("OnlineDesigner.Models.Design", "Design")
+                        .WithMany()
+                        .HasForeignKey("DesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlineDesigner.Models.Order", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Design");
+                });
+
             modelBuilder.Entity("OnlineDesigner.Models.Design", b =>
                 {
                     b.HasOne("OnlineDesigner.Models.Item", "Item")
@@ -412,10 +448,6 @@ namespace OnlineDesigner.Migrations
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("OnlineDesigner.Models.Order", null)
-                        .WithMany("Designs")
-                        .HasForeignKey("OrderId");
 
                     b.Navigation("Item");
                 });
@@ -431,14 +463,16 @@ namespace OnlineDesigner.Migrations
 
             modelBuilder.Entity("OnlineDesigner.Models.Order", b =>
                 {
-                    b.HasOne("OnlineDesigner.Models.User", null)
+                    b.HasOne("OnlineDesigner.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlineDesigner.Models.Order", b =>
                 {
-                    b.Navigation("Designs");
+                    b.Navigation("CartItems");
                 });
 
             modelBuilder.Entity("OnlineDesigner.Models.Type", b =>

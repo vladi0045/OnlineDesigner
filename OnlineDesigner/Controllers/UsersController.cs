@@ -19,6 +19,7 @@ public class UsersController : Controller
     private readonly OnlineDesignerContext _context;
     private readonly IdentityContext _identityContext;
     private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
 
     public enum Filter
     {
@@ -26,11 +27,12 @@ public class UsersController : Controller
         Role
     }
 
-    public UsersController(OnlineDesignerContext context, IdentityContext identityContext, SignInManager<User> signInManager)
+    public UsersController(OnlineDesignerContext context, IdentityContext identityContext, SignInManager<User> signInManager, UserManager<User> userManager)
     {
         _context = context;
         _identityContext = identityContext;
         _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index(string searchString, int filter)
